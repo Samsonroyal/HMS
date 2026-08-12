@@ -15,6 +15,8 @@ import PatHome from './component/Patient/PatHome'
 import PatientAbout from './component/Patient/PatientAbout'
 import PatientGallery from './component/Patient/PatientGallery'
 import PatientContact from './component/Patient/PatientContact'
+import PatientAppointment from './component/Patient/PatientAppointment'
+import PatientPrescription from './component/Patient/PatientPrescription'
 import Doctor from './component/Doctor/Doctor'
 import DocGallery from './component/Doctor/DocGallery'
 import Employee from './component/Employee/Employee'
@@ -35,6 +37,8 @@ import EmpContact from './component/Employee/EmpContact';
 
 import DocAbout from './component/Doctor/DocAbout';
 import DocContact from './component/Doctor/DocContact';
+import DocAppointment from './component/Doctor/DocAppointment';
+import DocPrescription from './component/Doctor/DocPrescription';
 
 
 
@@ -58,6 +62,8 @@ function App() {
       <Route exact path="/patient/login/about" component = {PatientAbout} />
       <Route exact path="/patient/login/gallery" component = {PatientGallery} />
       <Route exact path="/patient/login/contact" component = {PatientContact} />
+      <Route exact path="/patient/login/appointment" component = {PatientAppointment} />
+      <Route exact path="/patient/login/prescription" component = {PatientPrescription} />
      
 
       
@@ -66,6 +72,8 @@ function App() {
       <Route exact path="/doctors/login/about" component = {DocAbout}/>
       <Route exact path="/doctors/login/gallery" component = {DocGallery}/>
       <Route exact path="/doctors/login/contact" component = {DocContact}/>
+      <Route exact path="/doctors/login/appointment" component = {DocAppointment}/>
+      <Route exact path="/doctors/login/prescription" component = {DocPrescription}/>
 
 
       <Route exact path="/employee/login/employee_home" component = {Employee} />

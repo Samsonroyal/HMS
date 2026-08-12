@@ -8,6 +8,8 @@ const Employee = require('./routes/users/Employee/employee');
 const Doctor = require('./routes/users/Doctor/docter');
 const Admin = require('./routes/users/Administrator/admin');
 const superAdmin = require('./routes/users/Administrator/superAdmin');
+const Appointment = require('./routes/users/Patient/appointment');
+const Prescription = require('./routes/users/Doctor/prescription');
 const api = require('./routes/api/api');
 
 
@@ -22,6 +24,8 @@ app.use('/employee', Employee);
 app.use('/doctor' , Doctor);
 app.use('/admin', Admin);
 app.use('/super', superAdmin);
+app.use('/appointment', Appointment);
+app.use('/prescription', Prescription);
 app.use('/api', api);
 
 app.use(express.static(path.join(__dirname + '/client/build')));

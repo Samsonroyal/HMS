@@ -54,6 +54,8 @@ class Navber extends Component {
                     <Nav.Link className="text-white" href="/patient/login/patient_home">Patient</Nav.Link>
                     <Nav.Link className="text-white" href="/patient/login/about">About</Nav.Link>                    
                     <Nav.Link className="text-white" href="/patient/login/gallery">Gallery</Nav.Link>
+                    <Nav.Link className="text-white" href="/patient/login/appointment">Appointment</Nav.Link>
+                    <Nav.Link className="text-white" href="/patient/login/prescription">Prescription</Nav.Link>
                     <Nav.Link className="text-white" href="/patient/login/contact">Contact Us</Nav.Link>
                     <Nav.Link className="text-white" href="/">Log Out</Nav.Link>
                     </Nav>

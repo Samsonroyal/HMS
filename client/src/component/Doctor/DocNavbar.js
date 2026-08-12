@@ -53,6 +53,8 @@ class DocNavbar extends Component {
                     <Nav.Link className="text-white" href="/doctors/login/doctor_home">Doctor</Nav.Link>
                     <Nav.Link className="text-white" href="/doctors/login/about">About</Nav.Link>                    
                     <Nav.Link className="text-white" href="/doctors/login/gallery">Gallery</Nav.Link>
+                    <Nav.Link className="text-white" href="/doctors/login/appointment">Appointment</Nav.Link>
+                    <Nav.Link className="text-white" href="/doctors/login/prescription">Prescription</Nav.Link>
                     <Nav.Link className="text-white" href="/doctors/login/contact">Contact Us</Nav.Link>
                     <Nav.Link className="text-white" href="/">Log Out</Nav.Link>
                     </Nav>
