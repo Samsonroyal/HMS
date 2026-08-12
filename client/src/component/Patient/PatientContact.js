@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import Navber from './PatientNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { patientNav } from '../dashboardNav';
 import Footer from '../Footer';
 import Homeimage from '../Homeimage';
 
@@ -9,11 +10,12 @@ class PatientContact extends Component {
     render() { 
         return (
             
-            <div className="bg-dark">
-                <Navber/>
+            <DashboardLayout title="Patient" items={patientNav}>
+            <div className="dash-role-page">
                 <Homeimage/>
                 <Footer/>
                 </div>
+            </DashboardLayout>
                 );
     }
 }

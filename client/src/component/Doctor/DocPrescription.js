@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Navber from './DocNavbar';
-import Footer from '../Footer';
+import DashboardLayout from '../DashboardLayout';
+import { doctorNav } from '../dashboardNav';
 import axios from 'axios';
+import FormField from '../Login/FormField';
 
 class DocPrescription extends Component {
   constructor() {
@@ -13,11 +14,13 @@ class DocPrescription extends Component {
       dosage: '',
       instructions: '',
       prescriptions: [],
-      message: ''
+      message: '',
+      messageType: ''
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
   onChange(e) {
@@ -40,12 +43,42 @@ class DocPrescription extends Component {
       }
     })
       .then(res => {
-        this.setState({ message: res.data, medicine_name: '', dosage: '', instructions: '' });
+        this.setState({
+          message: res.data.message || 'Prescription saved',
+          messageType: 'success',
+          medicine_name: '',
+          dosage: '',
+          instructions: '',
+          patient_id: ''
+        });
         this.fetchPrescriptions();
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ message: 'Could not save prescription' });
+        const message = err.response && err.response.data && err.response.data.error
+          ? err.response.data.error
+          : 'Could not save prescription. Please try again.';
+        this.setState({ message, messageType: 'danger' });
+      });
+  }
+
+  onDelete(prescription_id) {
+    const ok = window.confirm('Delete this prescription? This cannot be undone.');
+    if (!ok) return;
+
+    axios.post('/prescription/delete', { prescription_id }, {
+      headers: {
+        authorization: sessionStorage.getItem('usertoken')
+      }
+    })
+      .then(res => {
+        this.setState({ message: res.data.message || 'Prescription deleted', messageType: 'success' });
+        this.fetchPrescriptions();
+      })
+      .catch(err => {
+        const message = err.response && err.response.data && err.response.data.error
+          ? err.response.data.error
+          : 'Could not delete prescription. Please try again.';
+        this.setState({ message, messageType: 'danger' });
       });
   }
 
@@ -78,8 +111,8 @@ class DocPrescription extends Component {
   render() {
     const { patients, prescriptions } = this.state;
     return (
-      <div className="bg-dark">
-        <Navber />
+      <DashboardLayout title="Doctor" items={doctorNav}>
+      <div className="dash-role-page">
         <h2 className="text-white my-3" align="center">Write Prescription</h2>
 
         <div className="row">
@@ -91,58 +124,49 @@ class DocPrescription extends Component {
                 </div>
                 <br />
                 <form noValidate onSubmit={this.onSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="patient">Patient</label>
-                    <select
-                      className="form-control"
-                      name="patient_id"
-                      value={this.state.patient_id}
-                      onChange={this.onChange}
-                      required
-                    >
-                      <option value="">Select Assigned Patient</option>
-                      {patients.map(patient => (
-                        <option key={patient.patient_id} value={patient.patient_id}>
-                          {patient.first_name} {patient.last_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="medicine_name">Medicine</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="medicine_name"
-                      placeholder="Enter Medicine Name"
-                      value={this.state.medicine_name}
-                      onChange={this.onChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="dosage">Dosage</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="dosage"
-                      placeholder="e.g. 500mg twice daily"
-                      value={this.state.dosage}
-                      onChange={this.onChange}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="instructions">Instructions</label>
-                    <textarea
-                      className="form-control"
-                      name="instructions"
-                      placeholder="Additional instructions"
-                      value={this.state.instructions}
-                      onChange={this.onChange}
-                    />
-                  </div>
+                  <FormField
+                    label="Patient"
+                    name="patient_id"
+                    as="select"
+                    options={patients.map(patient => ({
+                      value: patient.patient_id,
+                      label: `${patient.first_name} ${patient.last_name}`
+                    }))}
+                    placeholder="Choose an assigned patient"
+                    value={this.state.patient_id}
+                    onChange={this.onChange}
+                    help="Only patients assigned to you appear here."
+                    required
+                  />
+                  <FormField
+                    label="Medicine"
+                    name="medicine_name"
+                    value={this.state.medicine_name}
+                    onChange={this.onChange}
+                    placeholder="e.g. Paracetamol"
+                    required
+                  />
+                  <FormField
+                    label="Dosage"
+                    name="dosage"
+                    value={this.state.dosage}
+                    onChange={this.onChange}
+                    placeholder="e.g. 500mg twice daily"
+                    help="How much and how often."
+                  />
+                  <FormField
+                    label="Instructions (optional)"
+                    name="instructions"
+                    as="textarea"
+                    rows={3}
+                    placeholder="Additional instructions"
+                    value={this.state.instructions}
+                    onChange={this.onChange}
+                  />
                   {this.state.message !== '' && (
-                    <div className="alert alert-info">{this.state.message}</div>
+                    <div className={`alert alert-${this.state.messageType || 'info'} auth-alert`} role="alert">
+                      {this.state.message}
+                    </div>
                   )}
                   <button type="submit" className="btn btn-lg btn-primary btn-block">
                     Save Prescription
@@ -169,6 +193,7 @@ class DocPrescription extends Component {
                         <th>Medicine</th>
                         <th>Dosage</th>
                         <th>Instructions</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -179,6 +204,15 @@ class DocPrescription extends Component {
                           <td>{prescription.medicine_name}</td>
                           <td>{prescription.dosage}</td>
                           <td>{prescription.instructions}</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger"
+                              onClick={() => this.onDelete(prescription.prescription_id)}
+                            >
+                              Delete
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -192,8 +226,8 @@ class DocPrescription extends Component {
           </div>
         </div>
 
-        <Footer />
       </div>
+      </DashboardLayout>
     );
   }
 }

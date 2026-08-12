@@ -50,7 +50,7 @@ class Navber extends Component {
             }
             bg = "primary"
             text = "white"
-            var expand = "lg" >
+            expand = "lg" >
                 <Navbar.Brand style = {
                     { color: "white" }
                 } >

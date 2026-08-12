@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './AdminNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { adminNav } from '../dashboardNav';
 import Footer from '../Footer';
 import Homeimage from '../Homeimage';
 
@@ -8,11 +9,12 @@ class AdminContact extends Component {
     render() { 
         return (
             
-            <div className="bg-dark">
-                <Navber/>
+            <DashboardLayout title="Admin" items={adminNav}>
+            <div className="dash-role-page">
                 <Homeimage/>
                 <Footer/>
                 </div>
+            </DashboardLayout>
                 );
     }
 }

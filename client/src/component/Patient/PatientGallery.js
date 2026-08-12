@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './PatientNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { patientNav } from '../dashboardNav';
 import GalleryCarousel from '../GalleryCarousel';
 
 
@@ -8,8 +9,8 @@ class PatientGallery extends Component {
    
     render() { 
         return ( 
-        <div className="bg-dark">
-            <Navber />
+        <DashboardLayout title="Patient" items={patientNav}>
+        <div className="dash-role-page">
 
             <br>
             </br>
@@ -17,6 +18,7 @@ class PatientGallery extends Component {
             
             
 </div>
+</DashboardLayout>
 
 );
     }

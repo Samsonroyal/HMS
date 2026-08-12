@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import '../Navber/Navber.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import logo from '../../photos/kiruddu/logo.gif';
 
 
 
@@ -39,13 +40,22 @@ class EmpNavbar extends Component {
         });
       };
 
+      handleLogout = () => {
+        sessionStorage.removeItem('usertoken');
+        sessionStorage.removeItem('userData');
+        window.location.href = '/';
+      };
+
     render() { 
         return ( 
             <div>
                 <Navbar className={classnames("navbar", {
                     "navbar--hidden": !this.state.visible
-                  })} bg="success" text="white" var expand="lg">
-                <Navbar.Brand style={{color:"white"}}>Lifescape Hospital Ltd</Navbar.Brand>
+                  })} bg="success" text="white" expand="lg">
+                <Navbar.Brand style={{color:"white"}}>
+                  <img src={logo} alt="Kiruddu National Referral Hospital Logo" height="40" className="d-inline-block align-top mr-2" />
+                  Kiruddu National Referral Hospital
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="text-white ml-auto">
@@ -53,8 +63,7 @@ class EmpNavbar extends Component {
                     <Nav.Link className="text-white" href="/employee/login/employee_home">Employee</Nav.Link>
                     <Nav.Link className="text-white" href="/employee/login/about">About</Nav.Link>                    
                     <Nav.Link className="text-white" href="/employee/login/gallery">Gallery</Nav.Link>
-                    <Nav.Link className="text-white" href="/employee/login/contact">Contact Us</Nav.Link>
-                    <Nav.Link className="text-white" href="/">Log Out</Nav.Link>
+                    <Nav.Link className="text-white" onClick={this.handleLogout}>Log Out</Nav.Link>
                     </Nav>
                     
                 </Navbar.Collapse>

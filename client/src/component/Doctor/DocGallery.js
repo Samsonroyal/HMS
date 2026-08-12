@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './DocNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { doctorNav } from '../dashboardNav';
 import GalleryCarousel from '../GalleryCarousel';
 
 
@@ -8,8 +9,8 @@ class DocGallery extends Component {
    
     render() { 
         return ( 
-        <div className="bg-dark">
-            <Navber />
+        <DashboardLayout title="Doctor" items={doctorNav}>
+        <div className="dash-role-page">
 
             <br>
             </br>
@@ -17,6 +18,7 @@ class DocGallery extends Component {
             
             
 </div>
+</DashboardLayout>
 
 );
     }

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import Navber from './PatientNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { patientNav } from '../dashboardNav';
 import { MDBContainer } from 'mdbreact';
 import Homeimage from '../Homeimage';
-import Footer from '../Footer';
 
 class PatientAbout extends Component {
     
     render() { 
         return ( 
-            <div className = "bg-dark">
-                <Navber/>
+            <DashboardLayout title="Patient" items={patientNav}>
+            <div className = "dash-role-page">
                 <Homeimage/>
 
                 <br>
@@ -39,9 +39,9 @@ class PatientAbout extends Component {
             
             
             </br>
-            <Footer/>
         
             </div>
+            </DashboardLayout>
          );
     }
 }

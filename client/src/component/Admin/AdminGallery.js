@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './AdminNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { adminNav } from '../dashboardNav';
 import GalleryCarousel from '../GalleryCarousel';
 
 
@@ -8,8 +9,8 @@ class AdminGallery extends Component {
    
     render() { 
         return ( 
-        <div className="bg-dark">
-            <Navber />
+        <DashboardLayout title="Admin" items={adminNav}>
+        <div className="dash-role-page">
 
             <br>
             </br>
@@ -17,6 +18,7 @@ class AdminGallery extends Component {
             
             
 </div>
+</DashboardLayout>
 
 );
     }

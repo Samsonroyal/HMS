@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import Navber from './AdminNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { adminNav } from '../dashboardNav';
 import { MDBContainer } from 'mdbreact';
 
 import Homeimage from '../Homeimage';
-import Footer from '../Footer';
 
 class AdminAbout extends Component {
     
     render() { 
         return ( 
-            <div className = "bg-dark">
-                <Navber/>
+            <DashboardLayout title="Admin" items={adminNav}>
+            <div className = "dash-role-page">
                 <Homeimage/>
 
                 <br>
@@ -42,9 +42,9 @@ class AdminAbout extends Component {
             
             
             </br>
-            <Footer/>
         
             </div>
+            </DashboardLayout>
          );
     }
 }

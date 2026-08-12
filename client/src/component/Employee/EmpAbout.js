@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import Navber from './EmpNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { employeeNav } from '../dashboardNav';
 import { MDBContainer } from 'mdbreact';
 
 import Homeimage from '../Homeimage';
-import Footer from '../Footer';
 
 class EmpAbout extends Component {
     
     render() { 
         return ( 
-            <div className = "bg-dark">
-                <Navber/>
+            <DashboardLayout title="Employee" items={employeeNav}>
+            <div className = "dash-role-page">
                 <Homeimage/>
 
                 <br>
@@ -41,9 +41,9 @@ class EmpAbout extends Component {
             
             
             </br>
-            <Footer/>
         
             </div>
+            </DashboardLayout>
          );
     }
 }

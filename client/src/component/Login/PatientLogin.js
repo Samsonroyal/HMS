@@ -1,25 +1,26 @@
-import React, { Component } from 'react'
-import Navber from '../Navber/Navber';
+import React, { Component } from 'react';
 import axios from 'axios';
-
-
+import AuthShell from './AuthShell';
+import FormField from './FormField';
 
 class PatientLogin extends Component {
- constructor() {
+  constructor() {
     super()
     this.state = {
       email: '',
       password: '',
-      errors: {}
+      message: '',
+      messageType: ''
     }
 
     this.onChange = this.onChange.bind(this)
     this.onSubmit = this.onSubmit.bind(this)
-  } 
+  }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
   }
+
   onSubmit(e) {
     e.preventDefault()
 
@@ -28,72 +29,63 @@ class PatientLogin extends Component {
       password: this.state.password
     }
 
+    if (!user.email || !user.password) {
+      this.setState({ message: 'Please enter your email and password', messageType: 'warning' });
+      return;
+    }
 
-    axios.post('/patient/login', {
-      email: user.email,
-      password: user.password
-    }).then(response => {
-      if(response.data === "Email not found") return "Email not found";
-      
-      sessionStorage.setItem('usertoken', response.data)
-      return response.data
-    }).then(res => {
-      if(res !== "Email not found") {
-        sessionStorage.setItem('userData', JSON.stringify(user));
-        this.props.history.push('/patient/login/patient_home');
-      } 
-    }).catch(err => {
-      console.log(err)
-    })
+    axios.post('/patient/login', user)
+      .then(res => {
+        sessionStorage.setItem('usertoken', res.data.token)
+        sessionStorage.setItem('userData', JSON.stringify({ email: user.email }));
+        this.setState({ message: 'Signing you in…', messageType: 'success' });
+        setTimeout(() => this.props.history.push('/patient/login/patient_home'), 800);
+      })
+      .catch(err => {
+        const message = err.response && err.response.data && err.response.data.error
+          ? err.response.data.error
+          : 'Unable to sign in. Please try again.';
+        this.setState({ message, messageType: 'danger' });
+      })
   }
 
   render() {
     return (
-      <div className="body">
-      <Navber/>
-      <div className="container my-5">
-        <div className="row">
-          <div className="col-md-6 mt-5 mx-auto">
-            <form noValidate onSubmit={this.onSubmit}>
-              <h1 className="h3 mb-3 mt-5 font-weight-normal btn-rg">Please sign in as Patient</h1>
-              <div className="form-group btn-rg">
-                <label htmlFor="email" >Email address</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  placeholder="Enter email"
-                  value={this.state.email}
-                  onChange={this.onChange}
-                />
-              </div>
-              <div className="form-group btn-rg">
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  placeholder="Password"
-                 value={this.state.password}
-                  onChange={this.onChange}
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-lg btn-primary btn-block mb-5"
-                href = "/patient/login/patient_home"
-              >
-                Sign in
-              </button>
-           </form>
-          </div>
-        </div>
-        <div className="reg ml-5"> <h5 className="btn-rg">Don't have any account <a href="/regPatient">Register Here</a></h5> </div>
-      </div>
-      
-      <div className="mb-5 mt-5">v</div>
-      
-      </div>  
+      <AuthShell
+        title="Patient Sign In"
+        subtitle="View your appointments, prescriptions and bill."
+        message={this.state.message}
+        messageType={this.state.messageType}
+        buttonText="Sign In"
+        onSubmit={this.onSubmit}
+        footer={
+          <>
+            Don't have an account?{' '}
+            <a href="/regPatient">Register here</a>
+          </>
+        }
+      >
+        <FormField
+          label="Email address"
+          name="email"
+          type="email"
+          value={this.state.email}
+          onChange={this.onChange}
+          placeholder="you@example.com"
+          autoComplete="email"
+          required
+        />
+        <FormField
+          label="Password"
+          name="password"
+          type="password"
+          value={this.state.password}
+          onChange={this.onChange}
+          placeholder="Your password"
+          autoComplete="current-password"
+          required
+        />
+      </AuthShell>
     )
   }
 }

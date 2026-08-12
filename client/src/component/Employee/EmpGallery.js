@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './EmpNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { employeeNav } from '../dashboardNav';
 import GalleryCarousel from '../GalleryCarousel';
 
 
@@ -8,8 +9,8 @@ class EmpGallery extends Component {
    
     render() { 
         return ( 
-        <div className="bg-dark">
-            <Navber />
+        <DashboardLayout title="Employee" items={employeeNav}>
+        <div className="dash-role-page">
 
             <br>
             </br>
@@ -17,6 +18,7 @@ class EmpGallery extends Component {
             
             
 </div>
+</DashboardLayout>
 
 );
     }

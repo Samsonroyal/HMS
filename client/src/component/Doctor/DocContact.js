@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Navber from './DocNavbar';
+import DashboardLayout from '../DashboardLayout';
+import { doctorNav } from '../dashboardNav';
 import Footer from '../Footer';
 import Homeimage from '../Homeimage';
 
@@ -8,11 +9,12 @@ class DocContact extends Component {
     render() { 
         return (
             
-            <div className="bg-dark">
-                <Navber/>
+            <DashboardLayout title="Doctor" items={doctorNav}>
+            <div className="dash-role-page">
                 <Homeimage/>
                 <Footer/>
                 </div>
+            </DashboardLayout>
                 );
     }
 }

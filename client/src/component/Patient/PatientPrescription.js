@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Navber from './PatientNavbar';
-import Footer from '../Footer';
 import axios from 'axios';
+import DashboardLayout from '../DashboardLayout';
+import { patientNav } from '../dashboardNav';
 
 class PatientPrescription extends Component {
   constructor() {
@@ -26,8 +26,8 @@ class PatientPrescription extends Component {
   render() {
     const { prescriptions } = this.state;
     return (
-      <div className="bg-dark">
-        <Navber />
+      <DashboardLayout title="Patient" items={patientNav}>
+      <div className="dash-role-page">
         <h2 className="text-white my-3" align="center">My Prescriptions</h2>
 
         <div className="container">
@@ -67,8 +67,8 @@ class PatientPrescription extends Component {
           </div>
         </div>
 
-        <Footer />
       </div>
+      </DashboardLayout>
     );
   }
 }
