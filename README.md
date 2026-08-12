@@ -3,10 +3,9 @@ A web app for Hospital Patient Record Management, built as a final year project 
 
 ## Hospital Patient Management System - Supports most of the standard HIMS functionalities:
 * Doctor Assign
-* Patient Appointment 
+* Patient Appointment
 * Doctor Prescription
 * Billing
-* 
 * Patient Login
 * Doctor Login
 * Employee Login
@@ -16,10 +15,15 @@ A web app for Hospital Patient Record Management, built as a final year project 
 * Back-End Technologies: Node Js, Express Js, MySQL
 * Front-End Technologies: React Js, BootStrap
 * Authentication provided using JWT
+* SQL queries are parameterized to prevent SQL injection; input is validated on both server and client
 
 ### How to Run
 * Start the Wampserver to ensure mysql db is running.
-* Configure your utils/db.js file accordingly(change with the database name, username and password)
+* Copy `.env.example` to `.env.local` and fill in your values (DB host, user, password, database name, and a strong `SECRET_KEY`). The DB credentials are read from the environment - do not hardcode them in `utils/db.js`.
+* Create the database schema:
+  ``` bash
+  $ mysql -u root -p < schema.sql
+  ```
 * In a git bash terminal run the command below to start the react app.
 
   ``` bash
@@ -35,3 +39,9 @@ A web app for Hospital Patient Record Management, built as a final year project 
   ```
 
 * Visit `localhost:3000` in your browser.
+
+### Tests
+``` bash
+$ npm test
+```
+Runs lightweight regression checks (no DB required) that guard against hardcoded JWT secrets and string-interpolated SQL.
