@@ -3,7 +3,8 @@ import Homeimage from "../Homeimage"
 import Navber from '../Navber/Navber';
 import './Home.css';
 
-import OurDoctors from '../OurDoctors';
+import Mandate from '../Mandate';
+import Services from '../Services';
 import Footer from '../Footer';
 import HomeQuote from '../HomeQuote';
 import Mission from '../Mission';
@@ -22,13 +23,12 @@ class Home extends Component {
                 
                 </br>
                 
-                <h1 className="head text-white" align="center"> Our Doctors </h1>
-                <br />
+                <Mandate/>
+                <br></br>
+                <br></br>
+                <Services/>
                 <br/>
-                <OurDoctors/>
-
-                <br></br>
-                <br></br>
+                <br/>
                 <h1 className="text-white" align="center">Latest News</h1>
                 <br/>
                 <br/>

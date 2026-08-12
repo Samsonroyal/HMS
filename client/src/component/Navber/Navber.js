@@ -4,6 +4,7 @@ import './Navber.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import logo from '../../photos/kiruddu/logo.gif';
 
 
 
@@ -52,7 +53,9 @@ class Navber extends Component {
             var expand = "lg" >
                 <Navbar.Brand style = {
                     { color: "white" }
-                } > Kiruddu National Referral Hospital </Navbar.Brand>
+                } >
+                <img src = {logo} alt = "Kiruddu National Referral Hospital Logo" height = "40" className = "d-inline-block align-top mr-2" />
+                Kiruddu National Referral Hospital </Navbar.Brand>
                 <Navbar.Toggle aria-controls = "basic-navbar-nav"/>
                 <Navbar.Collapse id = "basic-navbar-nav">
             <Nav className = "ml-auto">

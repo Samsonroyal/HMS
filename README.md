@@ -23,15 +23,15 @@ A web app for Hospital Patient Record Management, built as a final year project 
 * In a git bash terminal run the command below to start the react app.
 
   ``` bash
-  $ npm install
+  $ bun install
   $ cd client
-  $ npm install
-  $ npm start
+  $ bun install
+  $ bun run start
   ```
 
 * In another terminal run this command to start the sql server
   ``` bash
-  $ npm start
+  $ bun run start
   ```
 
 * Visit `localhost:3000` in your browser.

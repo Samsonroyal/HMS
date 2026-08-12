@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navber from './PatientNavbar';
 import Footer from '../Footer';
-import doc_img from './doctor1.jpg';
+import doc_img from '../photos/kiruddu/gallery8.jpg';
 import 'mdbreact';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';

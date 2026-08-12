@@ -1,110 +1,100 @@
 import React, { Component } from 'react';
 import Card from 'react-bootstrap/Card';
-import Img1 from '../photos/facilities1.jpg';
-import Img2 from '../photos/facilities2.jpg';
-import Img3 from '../photos/facilities3.jpg';
-import Img4 from '../photos/facilities4.jpg';
-import Img5 from '../photos/facilities5.jpg';
-import Img6 from '../photos/facilities6.jpg';
-import Img7 from '../photos/gallery1.jpg';
-import Img8 from '../photos/gallery2.jpg';
-import Img9 from '../photos/gallery3.jpg';
-import Img10 from '../photos/gallery4.jpg';
-import OurDoctors from './OurDoctors';
+import Img1 from '../photos/kiruddu/gallery1.png';
+import Img2 from '../photos/kiruddu/gallery2.png';
+import Img3 from '../photos/kiruddu/gallery3.jpg';
+import Img4 from '../photos/kiruddu/gallery4.png';
+import Img5 from '../photos/kiruddu/gallery5.png';
+import Img6 from '../photos/kiruddu/gallery6.jpg';
+import Img7 from '../photos/kiruddu/gallery7.jpg';
+import Img8 from '../photos/kiruddu/gallery8.jpg';
+import Mandate from './Mandate';
 import Footer from './Footer';
 
 class Gallery extends Component {
   render() {
     return (
-      <div>
+      <div className="container">
         <h2 className="head text-white" align="center">
-          Our Facilities
+          Our Gallery
         </h2>
         <br />
         <div className="card-deck">
-          <Card className="text-danger">
-            <Card.Img src={Img1} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title>
-                <h3>Ward Rooms</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img1} alt="Cleft lip repair" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                A baby with cleft lip had his lip repaired
+              </Card.Text>
+            </Card.Body>
           </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img2} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title>
-                <h3>Operation Theater</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img2} alt="Recovered burn patient" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Patient who recovered from severe flame burns
+              </Card.Text>
+            </Card.Body>
           </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img3} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title>
-                <h3>CT Scan/ CAT Scan Center</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img3} alt="Theatre staff at work" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Theatre staff operating on a Burns patient
+              </Card.Text>
+            </Card.Body>
           </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img4} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title>
-                <h3>PET Scan Center</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
-          </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img5} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title>
-                <h3>ICU / CCU</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
-          </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img6} alt="Card image" height="500" />
-            <Card.ImgOverlay>
-              <Card.Title className="text-danger">
-                <h3>OT Specialized for Heart Surgery</h3>
-              </Card.Title>
-            </Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img4} alt="Breast reconstruction" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Breast reduction and reconstruction surgery
+              </Card.Text>
+            </Card.Body>
           </Card>
         </div>
-        <br />
-        <br />
-        <h2 className="head text-white" align="center">
-          In Action
-        </h2>
         <br />
         <div className="card-deck">
-          <Card className="text-danger">
-            <Card.Img src={Img7} alt="Card image" height="500" />
-            <Card.ImgOverlay></Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img5} alt="Abdominal aesthetics" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Abdominal Aesthetics
+              </Card.Text>
+            </Card.Body>
           </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img8} alt="Card image" height="500" />
-            <Card.ImgOverlay></Card.ImgOverlay>
+          <Card className="bg-dark">
+            <Card.Img src={Img6} alt="ICU care" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Staff attending to severely burnt patients in the ICU
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <Card className="bg-dark">
+            <Card.Img src={Img7} alt="OPD partitions" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                OPD partitioned into admission, consultation and dressing rooms
+              </Card.Text>
+            </Card.Body>
+          </Card>
+          <Card className="bg-dark">
+            <Card.Img src={Img8} alt="Burns and Plastic Surgery staff" height="250" />
+            <Card.Body>
+              <Card.Text className="text-white">
+                Some of the Burns and Plastic Surgery department staff
+              </Card.Text>
+            </Card.Body>
           </Card>
         </div>
         <br />
         <br />
-        <div className="card-deck">
-          <Card className="text-danger">
-            <Card.Img src={Img9} alt="Card image" height="500" />
-            <Card.ImgOverlay></Card.ImgOverlay>
-          </Card>
-          <Card className="text-danger">
-            <Card.Img src={Img10} alt="Card image" height="500" />
-            <Card.ImgOverlay></Card.ImgOverlay>
-          </Card>
-        </div>
-        <br />
-        <br />
-        <OurDoctors />
+        <Mandate />
         <Footer />
-        </div>
+      </div>
     );
-}}
+  }
+}
 
 export default Gallery;

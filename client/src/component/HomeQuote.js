@@ -8,16 +8,24 @@ const HomeQuote = () => {
         <Card>
           <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey="0">
-              New Section Added
+              An interview with Dr. Kabugo Charles about kidney diseases on NTV
+              Uganda
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="0">
             <Card.Body>
-              <Card.Title>Inauguration of New Section</Card.Title>
               <Card.Text>
-                A Section containing facilities such as a new Research and
-                Development Cell, Operation Theater and a Check-Up center.
+                The Executive Director of Kiruddu National Referral Hospital,
+                Dr. Kabugo Charles, discusses kidney disease treatment at the
+                hospital.
               </Card.Text>
+              <a
+                href="https://www.kiruddu.hosp.go.ug/news/an-interview-with-dr.-kabugo-charles-about-kidney-diseases-on-ntv-uganda"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read more on the official website
+              </a>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -25,16 +33,22 @@ const HomeQuote = () => {
         <Card>
           <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey="1">
-              Best Hospital Award
+              Kiruddu Hospital sets up systems for low shelf life medicines
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="1">
             <Card.Body>
-              <Card.Title>Awarded to be Best Hospital in Kolkata</Card.Title>
               <Card.Text>
-                We are overwhelmed by the support our patients provide us and
-                you made us the best in Kolkata!
+                The hospital has put in place systems to safely manage medicines
+                with a low shelf life.
               </Card.Text>
+              <a
+                href="https://www.kiruddu.hosp.go.ug/news/kiruddu-hospital-sets-up-systems-for-low-shelf-life-medicines"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read more on the official website
+              </a>
             </Card.Body>
           </Accordion.Collapse>
         </Card>
@@ -42,16 +56,22 @@ const HomeQuote = () => {
         <Card>
           <Card.Header>
             <Accordion.Toggle as={Button} variant="link" eventKey="2">
-              RnD Update
+              Health ministry takes over Kiruddu, Kawempe hospitals
             </Accordion.Toggle>
           </Card.Header>
           <Accordion.Collapse eventKey="2">
             <Card.Body>
-              <Card.Title>Medicinal Contribution</Card.Title>
               <Card.Text>
-                Researcher Dr. Subhashish Karmakar found a new cure for microbes
-                growing on skin.
+                The Ministry of Health has taken over the management of Kiruddu
+                and Kawempe hospitals.
               </Card.Text>
+              <a
+                href="https://www.kiruddu.hosp.go.ug/news/health-ministry-takes-over-kiruddu--kawempe-hospitals"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read more on the official website
+              </a>
             </Card.Body>
           </Accordion.Collapse>
         </Card>

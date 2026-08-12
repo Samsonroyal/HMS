@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import OurDoctors from '../OurDoctors'
+import Mandate from '../Mandate'
 import Navber from './PatientNavbar';
 import '../Home/Home.css';
 import HomeQuote from '../HomeQuote';
@@ -18,7 +18,7 @@ class PatHome extends Component {
                 </br>
                 <br>
                 </br>
-                <h1 className="head text-white" align="center"> Our Doctors </h1>
+                <h1 className="head text-white" align="center"> Our Mandate </h1>
                 <br>
                 
                 </br>
@@ -27,10 +27,10 @@ class PatHome extends Component {
                 </br>
                 <br/>
                 <br/>
-                <OurDoctors/>
+                <Mandate/>
                 <br></br>
                 <br></br>
-                <h1 className="text-white" align="center">News and Achievements</h1>
+                <h1 className="text-white" align="center">Latest News</h1>
                 <br/>
                 <br/>
                 <HomeQuote/>
