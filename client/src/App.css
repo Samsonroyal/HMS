@@ -1,3 +1,57 @@
 .App{
   font-family: 'Ubuntu', sans-serif;
 }
+
+/* Mobile-first: prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Tables scroll on small screens instead of breaking the layout */
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Responsive heading scale */
+h1.head {
+  font-size: 1.75rem;
+}
+
+@media (min-width: 576px) {
+  h1.head {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 992px) {
+  h1.head {
+    font-size: 2.5rem;
+  }
+}
+
+/* Bootstrap 4 card-deck does not stack on small screens - stack it */
+@media (max-width: 575.98px) {
+  .card-deck {
+    display: block;
+  }
+  .card-deck .card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Friendlier touch targets and spacing on mobile */
+@media (max-width: 767.98px) {
+  .jumbotron {
+    padding: 1.5rem 1rem;
+  }
+  .btn {
+    white-space: normal;
+  }
+  .navbar .nav-link {
+    padding: 0.5rem 0.25rem;
+  }
+}

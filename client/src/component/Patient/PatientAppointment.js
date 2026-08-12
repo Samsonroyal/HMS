@@ -155,6 +155,7 @@ class PatientAppointment extends Component {
                 </div>
                 <br />
                 {appointments.length !== 0 ? (
+                  <div className="table-responsive">
                   <table className="table">
                     <thead>
                       <tr>
@@ -181,6 +182,7 @@ class PatientAppointment extends Component {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 ) : (
                   <p>No appointments booked yet.</p>
                 )}

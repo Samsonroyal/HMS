@@ -33,6 +33,7 @@ class PatientPrescription extends Component {
         <div className="container">
           <div className="jumbotron mt-5" style={{ backgroundColor: "#e0e0e0" }}>
             {prescriptions.length !== 0 ? (
+              <div className="table-responsive">
               <table className="table">
                 <thead>
                   <tr>
@@ -59,6 +60,7 @@ class PatientPrescription extends Component {
                   ))}
                 </tbody>
               </table>
+              </div>
             ) : (
               <p>No prescriptions yet.</p>
             )}

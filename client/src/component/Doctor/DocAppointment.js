@@ -49,6 +49,7 @@ class DocAppointment extends Component {
         <div className="container">
           <div className="jumbotron mt-5" style={{ backgroundColor: "#e0e0e0" }}>
             {appointments.length !== 0 ? (
+              <div className="table-responsive">
               <table className="table">
                 <thead>
                   <tr>
@@ -72,15 +73,15 @@ class DocAppointment extends Component {
                       <td>{appointment.status}</td>
                       <td>
                         {appointment.status === 'pending' && (
-                          <div className="btn-group">
+                          <div className="btn-group btn-group-sm">
                             <button
-                              className="btn btn-sm btn-success"
+                              className="btn btn-success"
                               onClick={() => this.updateStatus(appointment.appointment_id, 'confirmed')}
                             >
                               Confirm
                             </button>
                             <button
-                              className="btn btn-sm btn-danger"
+                              className="btn btn-danger"
                               onClick={() => this.updateStatus(appointment.appointment_id, 'cancelled')}
                             >
                               Cancel
@@ -100,6 +101,7 @@ class DocAppointment extends Component {
                   ))}
                 </tbody>
               </table>
+              </div>
             ) : (
               <p>No appointments yet.</p>
             )}

@@ -160,6 +160,7 @@ class DocPrescription extends Component {
                 </div>
                 <br />
                 {prescriptions.length !== 0 ? (
+                  <div className="table-responsive">
                   <table className="table">
                     <thead>
                       <tr>
@@ -182,6 +183,7 @@ class DocPrescription extends Component {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 ) : (
                   <p>No prescriptions written yet.</p>
                 )}
