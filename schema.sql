@@ -93,3 +93,14 @@ CREATE TABLE IF NOT EXISTS prescription (
     FOREIGN KEY (patient_id) REFERENCES patient(patient_id),
     FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id)
 );
+
+CREATE TABLE IF NOT EXISTS activity_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_type ENUM('patient', 'doctor', 'admin') NOT NULL,
+    user_id INT NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_activity_user (user_type, user_id),
+    INDEX idx_activity_created (created_at)
+);
