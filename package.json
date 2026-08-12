@@ -5,16 +5,20 @@
     "main": "server.js",
     "scripts": {
         "start": "bun run server.js",
-        "dev": "bun --watch server.js"
+        "dev": "bun --watch server.js",
+        "test": "node --test \"test/*.test.js\""
     },
     "author": "Samson were",
     "license": "MIT",
     "dependencies": {
         "bcrypt": "^6.0.0",
         "body-parser": "^1.20.6",
+        "dotenv": "^17.4.2",
         "express": "^4.22.2",
+        "express-rate-limit": "^8.6.2",
         "jsonwebtoken": "^9.0.3",
-        "mysql": "^2.18.1"
+        "mysql": "^2.18.1",
+        "mysql2": "^3.23.3"
     },
     "trustedDependencies": [],
     "devDependencies": {}
