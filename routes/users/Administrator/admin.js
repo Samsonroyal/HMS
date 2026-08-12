@@ -1,168 +1,200 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const admin = express.Router();
 
 const db = require('../../../utils/db');
+const { authenticate, signToken } = require('../../../utils/auth');
+const { authLimiter, apiLimiter } = require('../../../utils/rateLimiters');
 
-process.env.SECRET_KEY = 'Arijit';
+function isValidEmail(email) {
+    return /^\S+@\S+\.\S+$/.test(email);
+}
 
-admin.post('/register', (req, res) => {
+admin.post('/register', authLimiter, (req, res) => {
+    const { first_name, last_name, email, phone_no, designation, password, address, salary } = req.body;
 
-    const adminData = {
-        first_name  : req.body.first_name,
-        last_name   : req.body.last_name,
-        email       : req.body.email,
-        phone_no    : req.body.phone_no,
-        designation : req.body.designation,
-        password    : req.body.password,
-        address     : req.body.address,
-        salary      : req.body.salary
+    if (!first_name || !last_name || !email || !password || !designation) {
+        return res.status(400).json({ error: 'Please provide first name, last name, email, designation and password' });
+    }
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ error: 'Please provide a valid email address' });
+    }
+    if (salary !== undefined && salary !== '' && isNaN(Number(salary))) {
+        return res.status(400).json({ error: 'Salary must be a number' });
     }
 
-    console.log(adminData)
+    const find = `SELECT * FROM admin WHERE email = ?`;
 
-    let find = `SELECT * FROM admin WHERE email = "${adminData.email}"`;
+    db.query(find, [email], (err1, result1) => {
+        if (err1) {
+            console.log(err1);
+            return res.status(500).json({ error: 'Server error' });
+        }
 
-    db.query(find, (err1, result1) => {
-        if(err1) console.log(err1);
-        console.log(result1[0]);
+        if (result1[0] === undefined) {
+            bcrypt.hash(password, 10, (errHash, hash) => {
+                if (errHash) {
+                    console.log(errHash);
+                    return res.status(500).json({ error: 'Server error' });
+                }
 
-        if(result1[0] == undefined) {
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-             adminData.password = hash;
-                
-                let create = `INSERT INTO admin (first_name, last_name, email, phone_no, designation, password, salary, address)
-                              VALUES ( "${adminData.first_name}", 
-                                       "${adminData.last_name}", 
-                                       "${adminData.email}",
-                                       "${adminData.phone_no}",
-                                       "${adminData.designation}",
-                                       "${adminData.password}",
-                                       ${adminData.salary},
-                                       "${adminData.address}"
-                                       )`;
+                const create = `INSERT INTO admin (first_name, last_name, email, phone_no, designation, password, salary, address)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-                db.query(create, (err2, result2) => {
-                    if(err2) console.log(err2);
-                    res.send("Created Database ooooooooooooohhhhhh");
-                })
+                db.query(create, [first_name, last_name, email, phone_no, designation, hash, salary, address], (err2) => {
+                    if (err2) {
+                        console.log(err2);
+                        return res.status(500).json({ error: 'Server error' });
+                    }
+                    res.status(201).json({ message: 'Employee registered successfully' });
+                });
             });
-        }else {
-            res.send("admin already exist...");
+        } else {
+            res.status(409).json({ error: 'admin already exist...' });
         }
     });
 });
 
-admin.post('/login', (req, res) => {
-    let find = `SELECT password, admin_id FROM admin WHERE email = "${req.body.email}"`;
-    
-    db.query(find, (err, result) => {
-        if(err) console.log(err);
-        // console.log(result);
+admin.post('/login', authLimiter, (req, res) => {
+    const { email, password } = req.body;
 
-        if(result[0] != undefined) {
-            if(bcrypt.compareSync(req.body.password, result[0].password)) {
-                let token = jwt.sign(result[0].admin_id, process.env.SECRET_KEY);
-                res.send(token);
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Please provide email and password' });
+    }
+
+    const find = `SELECT password, admin_id FROM admin WHERE email = ?`;
+
+    db.query(find, [email], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Server error' });
+        }
+
+        if (result[0] !== undefined) {
+            if (bcrypt.compareSync(password, result[0].password)) {
+                res.json({ token: signToken(result[0].admin_id) });
             } else {
-                res.send('Password incorrect');
+                res.status(401).json({ error: 'Password incorrect' });
             }
         } else {
-            res.send("Email not found");
+            res.status(404).json({ error: 'Email not found' });
         }
     });
 });
 
 admin.get('/details', (req, res) => {
-    let user_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
-    
-    let user = `SELECT * FROM admin WHERE admin_id = ${user_id}`;
-    db.query(user, (err, result) => {
-        if (err) console.log(err);
+    const admin_id = authenticate(req, res);
+    if (!admin_id) return;
+
+    const sql = `SELECT * FROM admin WHERE admin_id = ?`;
+    db.query(sql, [admin_id], (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ error: 'Server error' });
+        }
         res.send(result);
     });
 });
 
-admin.post('/delete', (req, res) => {
-    const find = `SELECT * FROM admin WHERE admin_id = ${req.body.admin_id}`;
-    let del =  `DELETE FROM admin WHERE admin_id = ${req.body.admin_id}`
+admin.post('/delete', apiLimiter, (req, res) => {
+    const { admin_id } = req.body;
 
-    db.query(find, (err1, result1) => {
-        if(err1) console.log(err1);
-
-        if(result1[0] != undefined) {
-            db.query(del, (err2, result2) => {
-                res.send('DELETED');
-            })
-        }
-    })
-})
-
-admin.post('/assign_doctor', (req, res) => {
-    const data = {
-        patient_id: req.body.patient_id,
-        doctor_id: req.body.doctor_id
-    };
-
-    const sql = `SELECT * FROM assign_doctor WHERE patient_id = "${data.patient_id}"`;
-
-    db.query(sql, (err1, result1) => {
-        if(err1) console.log(err1);
-
-        if(result1[0] == undefined) {
-            const create = `INSERT INTO assign_doctor (patient_id, doctor_id) 
-                            VALUES ( "${data.patient_id}",
-                                     "${data.doctor_id}"
-                            )`
-            db.query(create, (err2, result2) =>{
-                if(err2) console.log(err2);
-                res.send("Yes   ")
-            })
-        }else {
-            res.send("already exist...");
-        }
-    })
-});
-
-admin.post('/bill', (req, res) => {
-    const data = {
-        patient_email: req.body.patient_email,
-        medicine_cost: req.body.medicine_cost,
-        room_charge: req.body.room_charge,
-        misc_charge: req.body.misc_charge,
-        operation_charge: req.body.operation_charge,
+    if (!admin_id) {
+        return res.status(400).json({ error: 'Please provide an admin id' });
     }
 
-    const sql = `SELECT * FROM patient WHERE email = "${data.patient_email}"`;
+    const find = `SELECT * FROM admin WHERE admin_id = ?`;
 
-
-    db.query(sql, (err1, result1) => {
-        if(err1) console.log(err1);
-
-
-        if(result1[0] !== undefined) {
-
-            const update = `
-                            UPDATE bill
-                            SET
-                                medicine_cost = medicine_cost + ${data.medicine_cost},
-                                operation_charge = operation_charge + ${data.operation_charge},
-                                room_charge = room_charge + ${data.room_charge},
-                                misc_charge = misc_charge + ${data.misc_charge}
-                            WHERE patient_id = ${result1[0].patient_id}
-                            `
-            console.log(update);
-
-            db.query(update, (err2, result2) =>{
-                if(err2) console.log(err2);
-                res.send("Yes   ")
-            })
-        }else {
-            res.send("already exist...");
+    db.query(find, [admin_id], (err1, result1) => {
+        if (err1) {
+            console.log(err1);
+            return res.status(500).json({ error: 'Server error' });
         }
-    })
+
+        if (result1[0] !== undefined) {
+            db.query(`DELETE FROM admin WHERE admin_id = ?`, [admin_id], (err2) => {
+                if (err2) {
+                    console.log(err2);
+                    return res.status(500).json({ error: 'Server error' });
+                }
+                res.json({ message: 'DELETED' });
+            });
+        } else {
+            res.status(404).json({ error: 'Admin not found' });
+        }
+    });
 });
 
+admin.post('/assign_doctor', apiLimiter, (req, res) => {
+    const { patient_id, doctor_id } = req.body;
+
+    if (!patient_id || !doctor_id) {
+        return res.status(400).json({ error: 'Please provide both patient id and doctor id' });
+    }
+
+    const sql = `SELECT * FROM assign_doctor WHERE patient_id = ?`;
+
+    db.query(sql, [patient_id], (err1, result1) => {
+        if (err1) {
+            console.log(err1);
+            return res.status(500).json({ error: 'Server error' });
+        }
+
+        if (result1[0] === undefined) {
+            const create = `INSERT INTO assign_doctor (patient_id, doctor_id) VALUES (?, ?)`;
+            db.query(create, [patient_id, doctor_id], (err2) => {
+                if (err2) {
+                    console.log(err2);
+                    return res.status(500).json({ error: 'Server error' });
+                }
+                res.status(201).json({ message: 'Doctor assigned successfully' });
+            });
+        } else {
+            res.status(409).json({ error: 'already exist...' });
+        }
+    });
+});
+
+admin.post('/bill', apiLimiter, (req, res) => {
+    const { patient_email, medicine_cost, room_charge, misc_charge, operation_charge } = req.body;
+
+    if (!patient_email || !isValidEmail(patient_email)) {
+        return res.status(400).json({ error: 'Please provide a valid patient email' });
+    }
+
+    const charges = [medicine_cost, room_charge, misc_charge, operation_charge];
+    if (charges.some(c => c === undefined || c === '' || isNaN(Number(c)))) {
+        return res.status(400).json({ error: 'All charge fields must be numbers' });
+    }
+
+    const sql = `SELECT * FROM patient WHERE email = ?`;
+
+    db.query(sql, [patient_email], (err1, result1) => {
+        if (err1) {
+            console.log(err1);
+            return res.status(500).json({ error: 'Server error' });
+        }
+
+        if (result1[0] !== undefined) {
+            const update = `UPDATE bill
+                            SET
+                                medicine_cost = medicine_cost + ?,
+                                operation_charge = operation_charge + ?,
+                                room_charge = room_charge + ?,
+                                misc_charge = misc_charge + ?
+                            WHERE patient_id = ?`;
+
+            db.query(update, [medicine_cost, operation_charge, room_charge, misc_charge, result1[0].patient_id], (err2) => {
+                if (err2) {
+                    console.log(err2);
+                    return res.status(500).json({ error: 'Server error' });
+                }
+                res.json({ message: 'Bill updated successfully' });
+            });
+        } else {
+            res.status(404).json({ error: 'Patient not found' });
+        }
+    });
+});
 
 module.exports = admin;

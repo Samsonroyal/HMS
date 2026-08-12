@@ -1,36 +1,36 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 const db = require('../../../utils/db');
+const { authenticate } = require('../../../utils/auth');
+const { apiLimiter } = require('../../../utils/rateLimiters');
 
-process.env.SECRET_KEY = 'Arijit';
+router.post('/book', apiLimiter, (req, res) => {
+    const patient_id = authenticate(req, res);
+    if (!patient_id) return;
 
-router.post('/book', (req, res) => {
-    const patient_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const { doctor_id, appointment_date, appointment_time, reason } = req.body;
 
-    const data = {
-        doctor_id: req.body.doctor_id,
-        appointment_date: req.body.appointment_date,
-        appointment_time: req.body.appointment_time,
-        reason: req.body.reason
-    };
+    if (!doctor_id || !appointment_date || !appointment_time) {
+        return res.status(400).json({ error: 'Please select a doctor, date and time' });
+    }
 
     const create = `INSERT INTO appointment (patient_id, doctor_id, appointment_date, appointment_time, reason, status)
                     VALUES (?, ?, ?, ?, ?, 'pending')`;
 
-    db.query(create, [patient_id, data.doctor_id, data.appointment_date, data.appointment_time, data.reason], (err, result) => {
+    db.query(create, [patient_id, doctor_id, appointment_date, appointment_time, reason], (err) => {
         if (err) {
             console.log(err);
-            return res.status(500).send('Could not book appointment');
+            return res.status(500).json({ error: 'Could not book appointment' });
         }
-        res.send('Appointment booked');
+        res.status(201).json({ message: 'Appointment booked successfully' });
     });
 });
 
 router.get('/patient', (req, res) => {
-    const patient_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const patient_id = authenticate(req, res);
+    if (!patient_id) return;
 
     const sql = `SELECT
                     a.appointment_id,
@@ -49,14 +49,15 @@ router.get('/patient', (req, res) => {
     db.query(sql, [patient_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
         res.send(result);
     });
 });
 
 router.get('/doctor', (req, res) => {
-    const doctor_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const doctor_id = authenticate(req, res);
+    if (!doctor_id) return;
 
     const sql = `SELECT
                     a.appointment_id,
@@ -76,13 +77,13 @@ router.get('/doctor', (req, res) => {
     db.query(sql, [doctor_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
         res.send(result);
     });
 });
 
-router.get('/all', (req, res) => {
+router.get('/all', apiLimiter, (req, res) => {
     const sql = `SELECT
                     a.appointment_id,
                     a.appointment_date,
@@ -101,26 +102,32 @@ router.get('/all', (req, res) => {
     db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
         res.send(result);
     });
 });
 
-router.post('/update', (req, res) => {
-    const data = {
-        appointment_id: req.body.appointment_id,
-        status: req.body.status
-    };
+const VALID_STATUSES = ['pending', 'confirmed', 'completed', 'cancelled'];
+
+router.post('/update', apiLimiter, (req, res) => {
+    const { appointment_id, status } = req.body;
+
+    if (!appointment_id) {
+        return res.status(400).json({ error: 'Please provide an appointment id' });
+    }
+    if (!VALID_STATUSES.includes(status)) {
+        return res.status(400).json({ error: 'Invalid appointment status' });
+    }
 
     const sql = `UPDATE appointment SET status = ? WHERE appointment_id = ?`;
 
-    db.query(sql, [data.status, data.appointment_id], (err, result) => {
+    db.query(sql, [status, appointment_id], (err) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
-        res.send('Updated');
+        res.json({ message: 'Appointment updated' });
     });
 });
 

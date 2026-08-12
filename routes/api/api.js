@@ -3,8 +3,9 @@ const express = require('express');
 const api = express.Router();
 
 const db = require('../../utils/db');
+const { apiLimiter } = require('../../utils/rateLimiters');
 
-api.get('/doctors', (req, res) => {
+api.get('/doctors', apiLimiter, (req, res) => {
     const sql = "SELECT doctor_id, first_name, last_name, email, specialisation FROM doctors";
 
     db.query(sql, (err, result) => {
@@ -14,7 +15,7 @@ api.get('/doctors', (req, res) => {
     });
 });
 
-api.get('/patients', (req, res) => {
+api.get('/patients', apiLimiter, (req, res) => {
     const sql = "SELECT first_name, last_name, email, address, phone_no FROM patient";
 
     db.query(sql, (err, result) => {

@@ -1,38 +1,37 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
 const db = require('../../../utils/db');
-
-process.env.SECRET_KEY = 'Arijit';
+const { authenticate } = require('../../../utils/auth');
 
 router.post('/create', (req, res) => {
-    const doctor_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const doctor_id = authenticate(req, res);
+    if (!doctor_id) return;
 
-    const data = {
-        patient_id: req.body.patient_id,
-        medicine_name: req.body.medicine_name,
-        dosage: req.body.dosage,
-        instructions: req.body.instructions
-    };
+    const { patient_id, medicine_name, dosage, instructions } = req.body;
+
+    if (!patient_id || !medicine_name) {
+        return res.status(400).json({ error: 'Please select a patient and provide a medicine name' });
+    }
 
     const date = new Date().toISOString().slice(0, 10);
 
     const sql = `INSERT INTO prescription (patient_id, doctor_id, medicine_name, dosage, instructions, date)
                  VALUES (?, ?, ?, ?, ?, ?)`;
 
-    db.query(sql, [data.patient_id, doctor_id, data.medicine_name, data.dosage, data.instructions, date], (err, result) => {
+    db.query(sql, [patient_id, doctor_id, medicine_name, dosage, instructions, date], (err) => {
         if (err) {
             console.log(err);
-            return res.status(500).send('Could not save prescription');
+            return res.status(500).json({ error: 'Could not save prescription' });
         }
-        res.send('Prescription saved');
+        res.status(201).json({ message: 'Prescription saved successfully' });
     });
 });
 
 router.get('/patient', (req, res) => {
-    const patient_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const patient_id = authenticate(req, res);
+    if (!patient_id) return;
 
     const sql = `SELECT
                     pr.prescription_id,
@@ -51,14 +50,15 @@ router.get('/patient', (req, res) => {
     db.query(sql, [patient_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
         res.send(result);
     });
 });
 
 router.get('/doctor', (req, res) => {
-    const doctor_id = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY);
+    const doctor_id = authenticate(req, res);
+    if (!doctor_id) return;
 
     const sql = `SELECT
                     pr.prescription_id,
@@ -76,7 +76,7 @@ router.get('/doctor', (req, res) => {
     db.query(sql, [doctor_id], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send(err);
+            return res.status(500).json({ error: 'Server error' });
         }
         res.send(result);
     });
